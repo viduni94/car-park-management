@@ -1,6 +1,4 @@
-
-
-public class DateTime implements Comparable <DateTime> { 
+public class DateTime implements Comparable <DateTime> {
 	
 	//Properties
 	private int year;
@@ -116,5 +114,4 @@ public class DateTime implements Comparable <DateTime> {
 	public int compareTo(DateTime o) {	
 		return (int) (this.getSecondInaDay() - o.getSecondInaDay());
 	}
-
 }

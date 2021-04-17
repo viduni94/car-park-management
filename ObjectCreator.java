@@ -1,5 +1,3 @@
-
-
 import java.awt.Color;
 import java.util.Scanner;
 
@@ -62,10 +60,9 @@ public class ObjectCreator {
 		default :
 			System.out.println("Invalid Choice");		
 		
-	}
-		return obj;
 		}
-	
+		return obj;
 	}
+}
 
 

@@ -1,5 +1,3 @@
-
-
 import java.util.Scanner;
 
 public class ConsoleApplication {
@@ -132,5 +130,4 @@ public class ConsoleApplication {
 		String plateID=input.next();
 		bambaCarParkManager.deleteVehicle(plateID);
 	}
-
 }

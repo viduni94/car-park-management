@@ -14,5 +14,4 @@ public class Van extends Vehicle {
 	public void setCargoVolume(double cargoVolume) {
 		this.cargoVolume=cargoVolume;
 	}
-
 }

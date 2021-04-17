@@ -54,8 +54,4 @@ public class Car extends Vehicle {
 			return false;
 		return true;
 	}
-	
-	
-
-	
 }

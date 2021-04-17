@@ -12,5 +12,4 @@ public class MotorBike extends Vehicle {
 	public void setEngineSize(String engineSize) {
 		this.engineSize=engineSize;
 	}
-
 }
