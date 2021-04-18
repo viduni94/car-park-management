@@ -9,6 +9,7 @@ public class BambaCarParkManager implements CarParkManager {
 
 	// Maximum number of slots available in the car park
 	private int availableSlots = 80;
+
 	private double chargePerHour = 300;
 	private double addCharge = 100;
 	private double maxCharge = 3000;
