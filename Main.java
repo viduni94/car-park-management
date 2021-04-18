@@ -2,19 +2,21 @@ public class Main {
   public static void main(String[] args) {
     BambaCarParkManager vehiclePark = new BambaCarParkManager();
     int noOfSlotsInGroundFloor = 80;
+    int noOfSlotsInFirstFloor = 60;
+    int noOfSlotsInSecondFloor = 70;
 
     // Ground Floor
     // Create 5 entrances
-    Runnable entranceGate1 = new EntranceGate(vehiclePark, noOfSlotsInGroundFloor);
-    Runnable entranceGate2 = new EntranceGate(vehiclePark, noOfSlotsInGroundFloor);
-    Runnable entranceGate3 = new EntranceGate(vehiclePark, noOfSlotsInGroundFloor);
-    Runnable entranceGate4 = new EntranceGate(vehiclePark, noOfSlotsInGroundFloor);
-    Runnable entranceGate5 = new EntranceGate(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable entranceGate1 = new EntranceGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable entranceGate2 = new EntranceGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable entranceGate3 = new EntranceGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable entranceGate4 = new EntranceGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable entranceGate5 = new EntranceGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
 
     // Create 3 exits
-    Runnable exitGate1 = new ExitGate(vehiclePark, noOfSlotsInGroundFloor);
-    Runnable exitGate2 = new ExitGate(vehiclePark, noOfSlotsInGroundFloor);
-    Runnable exitGate3 = new ExitGate(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable exitGate1 = new ExitGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable exitGate2 = new ExitGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
+    Runnable exitGate3 = new ExitGateGroundFloor(vehiclePark, noOfSlotsInGroundFloor);
 
     // 5 entry gate threads
     Thread northernEntryGateOneThread = new Thread(entranceGate1, "NorthernEntryGateOne");
@@ -31,11 +33,6 @@ public class Main {
     Thread southernExitGateThread = new Thread(exitGate1, "SouthernExitGate");
     Thread westernExitGateThread = new Thread(exitGate2, "WesternExitGate");
     Thread easternExitGateThread = new Thread(exitGate3, "EasternExitGate");
-
-    // Make exit gate threads deamons so that it runs in the background and dies when there is nothing to exit
-    southernExitGateThread.setDaemon(true);
-    westernExitGateThread.setDaemon(true);
-    easternExitGateThread.setDaemon(true);
 
     // Start the threads
     northernEntryGateOneThread.start();

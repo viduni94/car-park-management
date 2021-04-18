@@ -8,7 +8,13 @@ public class BambaCarParkManager implements CarParkManager {
 	private static BambaCarParkManager instance = null;
 
 	// Maximum number of slots available in the car park
-	private int availableSlots = 80;
+	private double availableSlotsInGroundFloor = 80;
+	private double availableSlotsInFirstFloor = 60;
+	private double getAvailableSlotsInSecondFloor = 70;
+
+	private final int SPACE_FOR_CAR = 1;
+	private final int SPACE_FOR_VAN = 2;
+	private final double SPACE_FOR_MOTORBIKE = 0.3333333333;
 
 	private double chargePerHour = 300;
 	private double addCharge = 100;
@@ -37,35 +43,53 @@ public class BambaCarParkManager implements CarParkManager {
 			}
 		}
 
-		while(listOfVehicle.size() == availableSlots) {
-			try {
-				System.out.println("Sorry...There are not space availble for parking...");
-				wait(5000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
 		if (obj instanceof Van ) {
-			while (listOfVehicle.size() == (availableSlots - 1)) {
+			while (availableSlotsInGroundFloor < SPACE_FOR_VAN) {
 				try {
-					System.out.println("Sorry..There are no slots available to park your Van."+"\n");
+					System.out.println("Van " + obj.getIdPlate() + " is waiting to be parked."+"\n");
 					wait(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
+
 			listOfVehicle.add(obj);
-			availableSlots -= 2;
-			System.out.println("Available slots : " + availableSlots);
+			availableSlotsInGroundFloor -= SPACE_FOR_VAN;
+			System.out.println("Van " + obj.getIdPlate() + " is parked. "  + "Available slots : " + availableSlotsInGroundFloor);
 			System.out.println("\n");
 			notifyAll();
 		}
 
-		if (obj instanceof MotorBike || obj instanceof Car) {
+		if (obj instanceof Car) {
+			while(availableSlotsInGroundFloor < SPACE_FOR_CAR) {
+				try {
+					System.out.println("Car " + obj.getIdPlate() + " is waiting to be parked."+"\n");
+					wait(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
 			listOfVehicle.add(obj);
-			availableSlots --;
-			System.out.println("Available slots : " + availableSlots);
+			availableSlotsInGroundFloor --;
+			System.out.println("Car " + obj.getIdPlate() + " is parked. "  + "Available slots : " + availableSlotsInGroundFloor);
+			notifyAll();
+		}
+
+		if (obj instanceof MotorBike) {
+			while(availableSlotsInGroundFloor < SPACE_FOR_MOTORBIKE) {
+				try {
+					System.out.println("Bike " + obj.getIdPlate() + " is waiting to be parked."+"\n");
+					wait(5000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+
+			listOfVehicle.add(obj);
+			availableSlotsInGroundFloor = availableSlotsInGroundFloor - SPACE_FOR_MOTORBIKE;
+			//if (availableSlotsInGroundFloor < SPACE_FOR_MOTORBIKE) availableSlotsInGroundFloor = 0;
+			System.out.println("Bike " + obj.getIdPlate() + " is parked. "  + "Available slots : " + availableSlotsInGroundFloor);
 			notifyAll();
 		}
 	}
@@ -83,17 +107,18 @@ public class BambaCarParkManager implements CarParkManager {
 		for (Vehicle item: listOfVehicle) {
 			// Checking for a particular vehicle with its' plate ID
 			if (item.getIdPlate().equals(IdPlate)) {
-				System.out.println("Vehicle Found.");
+				//System.out.println("Vehicle Found.");
 				if (item instanceof Van) {
-					availableSlots += 2;
-					System.out.println("Space cleared after deleting a Van.\nAvailable Slots : " + availableSlots);
-				} else {
-					availableSlots++;
-					System.out.println("Space cleared after deleting a vehicle.\nAvailable Slots : " + availableSlots);
+					availableSlotsInGroundFloor += SPACE_FOR_VAN;
+					System.out.println("Space cleared after deleting a Van.\nAvailable Slots : " + availableSlotsInGroundFloor);
+				} else if (item instanceof Car) {
+					availableSlotsInGroundFloor++;
+					System.out.println("Space cleared after deleting a Car.\nAvailable Slots : " + availableSlotsInGroundFloor);
+				} else if (item instanceof MotorBike) {
+					availableSlotsInGroundFloor = availableSlotsInGroundFloor + SPACE_FOR_MOTORBIKE;
+					System.out.println("Space cleared after deleting a Bike.\nAvailable Slots : " + availableSlotsInGroundFloor);
 				}
 				notifyAll();
-			} else {
-				System.out.println("Vehicle not found.");
 			}
 		}
 	}

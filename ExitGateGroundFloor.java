@@ -1,12 +1,12 @@
 import java.awt.*;
 import java.util.Random;
 
-public class ExitGate implements Runnable {
+public class ExitGateGroundFloor implements Runnable {
 
   private BambaCarParkManager carPark;
   private final int NO_OF_SLOTS;
 
-  public ExitGate(BambaCarParkManager carPark, int noOfSlots) {
+  public ExitGateGroundFloor(BambaCarParkManager carPark, int noOfSlots) {
     super();
     this.carPark = carPark;
     NO_OF_SLOTS = noOfSlots;
