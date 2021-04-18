@@ -35,11 +35,11 @@ public class EntranceGateGroundFloor implements Runnable {
                 createRandomIntBetween(00, 23), createRandomIntBetween(00, 60), createRandomIntBetween(00, 60));
 
         if (Math.random() < 0.33) {
-          vehicle = new Car(generateNumberPlate(), "Toyota", date, 4, Color.BLACK);
+          vehicle = new Car(generateNumberPlate(), "Toyota", date, 4, Color.BLACK, 1);
         } else if (Math.random() < 0.67) {
-          vehicle = new Van(generateNumberPlate(), "Nissan", date, 20);
+          vehicle = new Van(generateNumberPlate(), "Nissan", date, 20, 2);
         } else {
-          vehicle = new MotorBike(generateNumberPlate(), "Honda", date, "660cc");
+          vehicle = new MotorBike(generateNumberPlate(), "Honda", date, "660cc", 3);
         }
         carPark.addVehicle(vehicle);
       }

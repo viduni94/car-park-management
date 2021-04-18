@@ -3,11 +3,11 @@ public class Van extends Vehicle {
 	private double cargoVolume;
 	
 	// Constructor
-	public Van(String idPlate, String brand, DateTime entryTime, double cargoVolume) {
-		super(idPlate, brand, entryTime);
-		this.cargoVolume=cargoVolume;
+	public Van(String idPlate, String brand, DateTime entryTime, double cargoVolume, int priority) {
+		super(idPlate, brand, entryTime, priority);
+		this.cargoVolume = cargoVolume;
 	}
-	
+
 	public double getCargoVolume() {
 		return cargoVolume;
 	}

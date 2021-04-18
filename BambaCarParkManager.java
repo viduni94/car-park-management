@@ -1,10 +1,11 @@
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.PriorityQueue;
 
 public class BambaCarParkManager implements CarParkManager {
 	
-	private ArrayList<Vehicle> listOfVehicle = new ArrayList<Vehicle>();
+	private PriorityQueue<Vehicle> listOfVehicle = new PriorityQueue<Vehicle>(500, new VehicleTypeComparator());
 	private static BambaCarParkManager instance = null;
 
 	// Maximum number of slots available in the car park
@@ -53,7 +54,7 @@ public class BambaCarParkManager implements CarParkManager {
 				}
 			}
 
-			listOfVehicle.add(obj);
+			listOfVehicle.offer(obj);
 			availableSlotsInGroundFloor -= SPACE_FOR_VAN;
 			System.out.println("Van " + obj.getIdPlate() + " is parked. "  + "Available slots : " + availableSlotsInGroundFloor);
 			System.out.println("\n");
@@ -70,7 +71,7 @@ public class BambaCarParkManager implements CarParkManager {
 				}
 			}
 
-			listOfVehicle.add(obj);
+			listOfVehicle.offer(obj);
 			availableSlotsInGroundFloor --;
 			System.out.println("Car " + obj.getIdPlate() + " is parked. "  + "Available slots : " + availableSlotsInGroundFloor);
 			notifyAll();
@@ -86,12 +87,13 @@ public class BambaCarParkManager implements CarParkManager {
 				}
 			}
 
-			listOfVehicle.add(obj);
+			listOfVehicle.offer(obj);
 			availableSlotsInGroundFloor = availableSlotsInGroundFloor - SPACE_FOR_MOTORBIKE;
-			//if (availableSlotsInGroundFloor < SPACE_FOR_MOTORBIKE) availableSlotsInGroundFloor = 0;
-			System.out.println("Bike " + obj.getIdPlate() + " is parked. "  + "Available slots : " + availableSlotsInGroundFloor);
+			if (availableSlotsInGroundFloor < SPACE_FOR_MOTORBIKE) availableSlotsInGroundFloor = 0;
+			System.out.println("Bike " + obj.getIdPlate() + " is parked. " + "Available slots : " + availableSlotsInGroundFloor);
 			notifyAll();
 		}
+		System.out.println((listOfVehicle));
 	}
   
 	@Override
@@ -107,17 +109,17 @@ public class BambaCarParkManager implements CarParkManager {
 		for (Vehicle item: listOfVehicle) {
 			// Checking for a particular vehicle with its' plate ID
 			if (item.getIdPlate().equals(IdPlate)) {
-				//System.out.println("Vehicle Found.");
 				if (item instanceof Van) {
 					availableSlotsInGroundFloor += SPACE_FOR_VAN;
-					System.out.println("Space cleared after deleting a Van.\nAvailable Slots : " + availableSlotsInGroundFloor);
+					System.out.println("Space cleared after a Van left the park.\nAvailable Slots : " + availableSlotsInGroundFloor);
 				} else if (item instanceof Car) {
 					availableSlotsInGroundFloor++;
-					System.out.println("Space cleared after deleting a Car.\nAvailable Slots : " + availableSlotsInGroundFloor);
+					System.out.println("Space cleared after a Car left the park.\nAvailable Slots : " + availableSlotsInGroundFloor);
 				} else if (item instanceof MotorBike) {
 					availableSlotsInGroundFloor = availableSlotsInGroundFloor + SPACE_FOR_MOTORBIKE;
-					System.out.println("Space cleared after deleting a Bike.\nAvailable Slots : " + availableSlotsInGroundFloor);
+					System.out.println("Space cleared after a Bike left the park.\nAvailable Slots : " + availableSlotsInGroundFloor);
 				}
+				// Vehicle has exited, notify all waiting entrance threads to admit more vehicles to the park
 				notifyAll();
 			}
 		}
@@ -126,7 +128,8 @@ public class BambaCarParkManager implements CarParkManager {
 	
 	@Override
 	public void printCurrentVehicles() {
-		Collections.sort(listOfVehicle, Collections.reverseOrder());
+		ArrayList vehicleList = new ArrayList(listOfVehicle);
+		Collections.sort(vehicleList, Collections.reverseOrder());
 		for (Vehicle item:listOfVehicle) {
 			if (item instanceof Van) {
 				System.out.println("Vehicle Type is a Van");
@@ -148,45 +151,47 @@ public class BambaCarParkManager implements CarParkManager {
 	@Override
 	public void printLongestPark() {
 		// Sort to the ascending order
-		Collections.sort(listOfVehicle);
+		ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>(listOfVehicle);
+		Collections.sort(vehicleList);
 		System.out.println("The longest parked vehicle is : ");
 		System.out.println("................................................");
-		System.out.println("ID Plate : "+listOfVehicle.get(0).getIdPlate());
-		if(listOfVehicle.get(0) instanceof Car) {
+		System.out.println("ID Plate : "+vehicleList.get(0).getIdPlate());
+		if(vehicleList.get(0) instanceof Car) {
 			System.out.println("Vehicle Type is a Car.");
-		} else if(listOfVehicle.get(0) instanceof Van){
+		} else if(vehicleList.get(0) instanceof Van){
 			System.out.println("Vehicle Type is a Van.");
 		} else {
 			System.out.println("Vehicle Type is a MotorBike.");
 		}
-		System.out.println("Parked Time : "+listOfVehicle.get(0).getEntryDate().getHours()
-				+":"+listOfVehicle.get(0).getEntryDate().getMinutes()
-				+":"+listOfVehicle.get(0).getEntryDate().getSeconds());
-		System.out.println("Parked Date  : "+listOfVehicle.get(0).getEntryDate().getDate()
-				+"/"+listOfVehicle.get(0).getEntryDate().getMonth()
-				+"/"+listOfVehicle.get(0).getEntryDate().getYear());
+		System.out.println("Parked Time : "+vehicleList.get(0).getEntryDate().getHours()
+				+":"+vehicleList.get(0).getEntryDate().getMinutes()
+				+":"+vehicleList.get(0).getEntryDate().getSeconds());
+		System.out.println("Parked Date  : "+vehicleList.get(0).getEntryDate().getDate()
+				+"/"+vehicleList.get(0).getEntryDate().getMonth()
+				+"/"+vehicleList.get(0).getEntryDate().getYear());
 	}
 
 	@Override
 	public void printLatestPark() {
 		// Sort to the descending order
-		Collections.sort(listOfVehicle, Collections.reverseOrder());
+		ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>(listOfVehicle);
+		Collections.sort(vehicleList, Collections.reverseOrder());
 		System.out.println("The latest parked vehicle is : ");
 		System.out.println("..............................................");
-		System.out.println("ID Plate : "+listOfVehicle.get(0).getIdPlate());
-		if (listOfVehicle.get(0) instanceof Car) {
+		System.out.println("ID Plate : "+vehicleList.get(0).getIdPlate());
+		if (vehicleList.get(0) instanceof Car) {
 			System.out.println("Vehicle Type is a Car.");
-		} else if(listOfVehicle.get(0) instanceof Van) {
+		} else if(vehicleList.get(0) instanceof Van) {
 			System.out.println("Vehicle Type is a Van.");
 		} else {
 			System.out.println("Vehicle Type is a MotorBike.");
 		}
-		System.out.println("Parked Time : "+listOfVehicle.get(0).getEntryDate().getHours()
-				+":"+listOfVehicle.get(0).getEntryDate().getMinutes()
-				+":"+listOfVehicle.get(0).getEntryDate().getSeconds());
-		System.out.println("Parked Date  : "+listOfVehicle.get(0).getEntryDate().getDate()
-				+"/"+listOfVehicle.get(0).getEntryDate().getMonth()
-				+"/"+listOfVehicle.get(0).getEntryDate().getYear());	
+		System.out.println("Parked Time : "+vehicleList.get(0).getEntryDate().getHours()
+				+":"+vehicleList.get(0).getEntryDate().getMinutes()
+				+":"+vehicleList.get(0).getEntryDate().getSeconds());
+		System.out.println("Parked Date  : "+vehicleList.get(0).getEntryDate().getDate()
+				+"/"+vehicleList.get(0).getEntryDate().getMonth()
+				+"/"+vehicleList.get(0).getEntryDate().getYear());
 	}
 
 	

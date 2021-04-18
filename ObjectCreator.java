@@ -25,6 +25,9 @@ public class ObjectCreator {
 				Integer.parseInt(timeString[0]),
 				Integer.parseInt(timeString[1]),
 				Integer.parseInt(timeString[2]));
+
+		System.out.println("Enter Priority :");
+		String priority = sc.next();
 		
 		switch(type) {
 		case Car:
@@ -37,7 +40,7 @@ public class ObjectCreator {
 			Color carColor=new Color(Integer.parseInt(colorArr[0]),
 					Integer.parseInt(colorArr[1]),Integer.parseInt(colorArr[2]));
 			
-			obj=new Car(plateID,brand,entryTime,numDoors,carColor);
+			obj=new Car(plateID,brand,entryTime,numDoors,carColor,Integer.parseInt(priority));
 			break;
 			
 		case Van:
@@ -47,14 +50,14 @@ public class ObjectCreator {
 			System.out.println("Enter the number of seats : ");
 			int seats=sc.nextInt();
 			
-			obj=new Van(plateID,brand,entryTime,cargoCapacity);
+			obj=new Van(plateID,brand,entryTime,cargoCapacity,Integer.parseInt(priority));
 			break;
 			
 		case MotorBike:
 			System.out.println("Enter the Engine Size : ");
 			String engineSize=sc.next();
 			
-			obj=new MotorBike(plateID,brand,entryTime,engineSize);
+			obj=new MotorBike(plateID,brand,entryTime,engineSize,Integer.parseInt(priority));
 			break;
 			
 		default :
